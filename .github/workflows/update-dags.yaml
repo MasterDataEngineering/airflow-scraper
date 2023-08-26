@@ -1,4 +1,4 @@
-name: deployEc2
+name: update dags
 
 on:
   workflow_dispatch:
