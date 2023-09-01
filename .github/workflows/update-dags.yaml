@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Check status
         run: |
-          INSTANCE_STATE=$(aws ec2 describe-instance-status --include-all-instances --instance-id i-01933dcba1a6a289a --filters Name=instance-state-name,Values=stopped --output text | grep -o 'pending\|running\|shutting-down\|terminated\|stopping\|stopped')
+          INSTANCE_STATE=$(aws ec2 describe-instance-status --include-all-instances --instance-id i-01933dcba1a6a289a --output text | grep -o 'pending\|running\|shutting-down\|terminated\|stopping\|stopped')
           echo "INSTANCE_STATE=$INSTANCE_STATE" >> "$GITHUB_OUTPUT"
 
   turn-on-ec2:
