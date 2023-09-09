@@ -11,9 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check status
+        id: check-status
         run: |
           INSTANCE_STATE=$(aws ec2 describe-instance-status --include-all-instances --instance-id i-01933dcba1a6a289a --output text | grep -o 'pending\|running\|shutting-down\|terminated\|stopping\|stopped')
           echo "INSTANCE_STATE=$INSTANCE_STATE" >> "$GITHUB_OUTPUT"
+    outputs:
+      instance-state: ${{ steps.check-status.outputs.INSTANCE_STATE }}
 
   turn-on-ec2:
     runs-on: ubuntu-latest
