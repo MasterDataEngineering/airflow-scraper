@@ -20,7 +20,7 @@ jobs:
           # run: |
           #   INSTANCE_STATE=$(aws ec2 describe-instance-status --include-all-instances --instance-id i-01933dcba1a6a289a --output text | grep -o 'pending\|running\|shutting-down\|terminated\|stopping\|stopped')
           #   echo "INSTANCE_STATE=$INSTANCE_STATE" >> "$GITHUB_OUTPUT"
-        run: aws ec2 describe-instance-status --include-all-instances --instance-id i-01933dcba1a6a289a --output text
+        run: aws ec2 describe-instance-status --include-all-instances --instance-id i-01933dcba1a6a289a --output text | grep -o 'pending\|running\|shutting-down\|terminated\|stopping\|stopped'
 
   # turn-on-ec2:
   #   runs-on: ubuntu-latest
