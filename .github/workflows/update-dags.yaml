@@ -28,11 +28,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-instance-status
     steps:
-      # TODO:
-      #   - implement step where private key is saved in pem file
-      #   - repalce private_key.pem file with actual file
-      #   - insert actual ec2 dag directory
+      - name: save private key to pem file
+        run: |
+          echo "$AWS_EC2_INSTANCE_PRIVATE_KEY" >> $HOME/private_key.pem
+          chmod 400 $HOME/private_key.pem
+        env:
+          AWS_EC2_INSTANCE_PRIVATE_KEY: ${{ secrets.AWS_EC2_INSTANCE_PRIVATE_KEY }}
       - name: upload dags to ec2
-        run: scp -i /path/to/private_key.pem airflow/dags/* ec2-user@${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}:/
+        run: scp -i $HOME/private_key.pem airflow/dags/* ec2-user@${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}:$HOME/airflow/dags
         env:
           AWS_EC2_INSTANCE_PUBLIC_IP: ${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}
