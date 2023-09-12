@@ -12,7 +12,7 @@ jobs:
     outputs:
       INSTANCE_STATE: ${{ steps.check-status.outputs.INSTANCE_STATE }}
     steps:
-      - name: Check status
+      - name: check status
         id: check-status
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -27,7 +27,7 @@ jobs:
     needs: check-instance-status
     if: ${{ needs.check-instance-status.outputs.INSTANCE_STATE == 'stopped' }}
     steps:
-      - name: Start AWS EC2
+      - name: start aws ec2 instance
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -37,7 +37,7 @@ jobs:
 
   upload-dags:
     runs-on: ubuntu-latest
-    needs: check-instance-status
+    needs: turn-on-ec2
     steps:
       - name: save private key to pem file
         env:
@@ -49,3 +49,16 @@ jobs:
         env:
           AWS_EC2_INSTANCE_PUBLIC_IP: ${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}
         run: scp -i $HOME/private_key.pem airflow/dags ec2-user@${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}:/home/ec2-user/airflow/dags
+
+  turn-off-ec2:
+    runs-on: ubuntu-latest
+    needs: [check-instance-status, upload-dags]
+    if: ${{ needs.check-instance-status.outputs.INSTANCE_STATE == 'stopped' }}
+    steps:
+      - name: stop aws ec2 instance
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_EC2_INSTANCE_ID: ${{secrets.AWS_EC2_INSTANCE_ID}}
+        run: aws ec2 stop-instances --instance-ids $AWS_EC2_INSTANCE_ID
