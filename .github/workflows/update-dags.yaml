@@ -40,7 +40,7 @@ jobs:
     needs: boot-instance
     if: |
       always() &&
-      (needs.check-instance-status.result == 'success' || needs.check-instance-status.result == 'skipped')
+      (needs.boot-instance.result == 'success' || needs.boot-instance.result == 'skipped')
     steps:
       - name: save private key to pem file
         env:
@@ -56,7 +56,9 @@ jobs:
   shutdown-instance:
     runs-on: ubuntu-latest
     needs: [check-instance-status, upload-dags]
-    if: needs.check-instance-status.outputs.INSTANCE_STATE == 'stopped'
+    if: |
+      always() &&
+      needs.check-instance-status.outputs.INSTANCE_STATE == 'stopped'
     steps:
       - name: stop aws ec2 instance
         env:
