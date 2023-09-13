@@ -50,7 +50,7 @@ jobs:
           AWS_EC2_INSTANCE_PRIVATE_KEY: ${{ secrets.AWS_EC2_INSTANCE_PRIVATE_KEY }}
         run: |
           echo "$AWS_EC2_INSTANCE_PRIVATE_KEY" >> $HOME/private_key.pem
-          chmod 600 $HOME/private_key.pem
+          chmod 400 $HOME/private_key.pem
       - name: upload dags to ec2
         env:
           AWS_EC2_INSTANCE_PUBLIC_IP: ${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}
