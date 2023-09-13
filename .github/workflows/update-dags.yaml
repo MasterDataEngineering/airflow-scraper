@@ -28,15 +28,15 @@ jobs:
     needs: check-instance-status
     if: needs.check-instance-status.outputs.INSTANCE_STATE == 'stopped'
     env:
-      AWS_EC2_INSTANCE_ID: ${{secrets.AWS_EC2_INSTANCE_ID}}
+      AWS_EC2_INSTANCE_ID: ${{ secrets.AWS_EC2_INSTANCE_ID }}
     steps:
       - name: start aws ec2 instance
         run: aws ec2 start-instances --instance-ids $AWS_EC2_INSTANCE_ID
       - name: wait for boot
         uses: truemark/aws-ec2-instance-wait-action@v3
         with:
-          instance-ids: $AWS_EC2_INSTANCE_ID
-          region: $AWS_DEFAULT_REGION
+          instance-ids: ${{ env.AWS_EC2_INSTANCE_ID }}
+          region: ${{ env.AWS_DEFAULT_REGION }}
 
   upload-dags:
     runs-on: ubuntu-latest
