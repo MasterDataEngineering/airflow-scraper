@@ -54,7 +54,7 @@ jobs:
       - name: upload dags to ec2
         env:
           AWS_EC2_INSTANCE_PUBLIC_IP: ${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}
-        run: scp -i $HOME/private_key.pem -e airflow/dags ec2-user@${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}:/home/ec2-user/airflow
+        run: scp -i $HOME/private_key.pem -r airflow/dags ec2-user@${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}:/home/ec2-user/airflow
 
   shutdown-instance:
     runs-on: ubuntu-latest
