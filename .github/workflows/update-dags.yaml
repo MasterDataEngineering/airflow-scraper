@@ -3,7 +3,7 @@ name: update dags
 on:
   pull_request:
     branches:
-      - development
+      - release
   workflow_dispatch:
 
 env:
