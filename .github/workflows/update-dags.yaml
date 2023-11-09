@@ -51,8 +51,8 @@ jobs:
         run: |
           echo "$AWS_EC2_INSTANCE_PRIVATE_KEY" >> $HOME/private_key.pem
           chmod 400 $HOME/private_key.pem
-          echo "aws_key: $AWS_EC2_INSTANCE_PRIVATE_KEY"
-          echo "private_key: $HOME/private_key.pem"
+      - name: Add host key to known_hosts
+        run: ssh-keyscan -H ${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }} >> $HOME/.ssh/known_hosts
       - name: upload dags to ec2
         env:
           AWS_EC2_INSTANCE_PUBLIC_IP: ${{ secrets.AWS_EC2_INSTANCE_PUBLIC_IP }}
