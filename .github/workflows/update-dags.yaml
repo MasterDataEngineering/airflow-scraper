@@ -45,6 +45,8 @@ jobs:
       always() &&
       (needs.boot-instance.result == 'success' || needs.boot-instance.result == 'skipped')
     steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
       - name: save private key to pem file
         env:
           AWS_EC2_INSTANCE_PRIVATE_KEY: ${{ secrets.AWS_EC2_INSTANCE_PRIVATE_KEY }}
